@@ -259,7 +259,7 @@ export function App() {
             <span className={`status-dot ${connected ? 'online' : ''}`} />
             {room ? `${online}대 연결` : '로컬 저장'}
             <span className="divider" />
-            v0.1.0
+            v0.1.1
           </div>
         </header>
         {(error || state.error) && (

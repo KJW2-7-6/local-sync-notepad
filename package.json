@@ -1,6 +1,6 @@
 {
   "name": "local-sync-notepad",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "같은 LAN에서 사용하는 공동 메모장과 텍스트 클립보드",
   "author": "Local Sync Notepad contributors",
@@ -13,8 +13,8 @@
     "test": "tsx --test --test-concurrency=1 tests/*.test.ts",
     "test:e2e": "playwright test",
     "check": "npm run typecheck && npm test && npm run build",
-    "dist:win": "npm run build && electron-builder --win nsis --x64",
-    "dist:linux": "npm run build && electron-builder --linux dir",
+    "dist:win": "npm run build && electron-builder --win nsis --x64 --publish never",
+    "dist:linux": "npm run build && electron-builder --linux dir --publish never",
     "icons": "python3 scripts/make-icons.py",
     "format": "prettier --write src tests *.json *.ts .github/workflows/*.yml docs/*.md *.md",
     "format:check": "prettier --check src tests *.json *.ts .github/workflows/*.yml"

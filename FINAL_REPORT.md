@@ -1,9 +1,9 @@
 # 최종 개발 보고서
 
-프로그램: **Local Sync Notepad 0.1.0**  
-작업일: 2026년 10월 1일  
-소스 작업: 지정한 `local-sync-notepad` Codex Cloud 환경  
-Windows 검증: 이 작업에서 직접 연결한 GitHub Actions의 Windows Server 2025
+- 프로그램: **Local Sync Notepad 0.1.1**
+- 작업일: 2026년 10월 1일
+- 소스 작업: 지정한 `local-sync-notepad` Codex Cloud 환경
+- Windows 검증: 이 작업에서 직접 연결한 GitHub Actions의 Windows Server 2025
 
 ## 1. 최종 구현 기능
 
@@ -46,7 +46,7 @@ Windows 검증: 이 작업에서 직접 연결한 GitHub Actions의 Windows Serv
 
 ## 5. 설치 방법
 
-[GitHub Releases](https://github.com/KJW2-7-6/local-sync-notepad/releases)의 `Local-Sync-Notepad-0.1.0-Setup-x64.exe`를 각 PC에서 실행한다. 일반 사용자 계정에 설치하며 설치 경로를 선택할 수 있다. 시작 메뉴와 바탕 화면 바로가기를 만든다. Windows 설정의 설치된 앱에서 제거한다. 사용자 데이터는 재설치를 위해 기본적으로 보존한다.
+[GitHub Releases](https://github.com/KJW2-7-6/local-sync-notepad/releases)의 `Local-Sync-Notepad-0.1.1-Setup-x64.exe`를 각 PC에서 실행한다. 일반 사용자 계정에 설치하며 설치 경로를 선택할 수 있다. 시작 메뉴와 바탕 화면 바로가기를 만든다. Windows 설정의 설치된 앱에서 제거한다. 사용자 데이터는 재설치를 위해 기본적으로 보존한다.
 
 설치 파일의 SHA-256 확인값과 Windows 설치 검사 결과도 함께 제공한다. 설치 파일 게시 상태와 마지막 GitHub 검증 정보는 이 보고서 마지막의 완료 기록에서 확인한다.
 
@@ -118,6 +118,8 @@ Windows 네트워크를 ‘개인’으로 설정하고 방화벽 안내에서 �
 
 Windows 저장 문제는 Linux 성공만으로 발견할 수 없었던 실제 결함이다. 오류를 무시하지 않고 Windows에서 재검사했다. Linux의 Wine 빌드 환경은 해결됐다고 주장하지 않는다. 배포 설치 파일은 Windows에서 제작한다.
 
+추가 게시 실패: 태그 실행에서 설치 도구가 GitHub 자동 게시를 시도해 인증값 오류가 났다. 설치 제작에는 게시 금지 옵션을 명시하고 게시 작업의 임시 GitHub 권한과 분리했다. 실패한 v0.1.0 태그는 기록을 보존하고 공개 버전을 0.1.1로 올려 재검사한다.
+
 ## 15. 클라우드에서 확인하지 못한 부분
 
 물리 Windows PC 두 대의 LAN과 서로 다른 OS 클립보드, 실제 공유기 방화벽/게스트 정책, 사용자 환경의 Windows 한글 입력기, 설치 파일을 처음 다운로드했을 때의 SmartScreen 표시, 실제 재부팅 자동 실행, 전원 차단의 파일 내구성, 다양한 회사 정책·백신 환경, 장시간·대규모 인원 부하를 확인하지 못했다.
@@ -134,5 +136,5 @@ Windows 저장 문제는 Linux 성공만으로 발견할 수 없었던 실제 �
 
 - Windows 설치·실행·제거를 확인한 실행: [Windows 및 Linux 자동 검사](https://github.com/KJW2-7-6/local-sync-notepad/actions/runs/36820719128).
 - 최신 기능 검증: [Windows/Linux 핵심·실제 앱·설치·보호 저장·제거 검사](https://github.com/KJW2-7-6/local-sync-notepad/actions/runs/36821267174). 두 운영체제에서 핵심 12개, 실제 앱 시나리오 2개 성공. Windows 설치/실행/OS 보호 저장/제거 성공.
-- 공개 설치 파일: [v0.1.0 다운로드](https://github.com/KJW2-7-6/local-sync-notepad/releases/tag/v0.1.0). 게시 결과는 배포 완료 후 확인 기록에 추가한다.
+- 공개 설치 파일: [v0.1.1 다운로드](https://github.com/KJW2-7-6/local-sync-notepad/releases/tag/v0.1.1). 게시 결과는 배포 완료 후 확인 기록에 추가한다.
 - 상세 작업 기록: [DEVELOPMENT_REPORT.md](DEVELOPMENT_REPORT.md). 구조: [ARCHITECTURE.md](docs/ARCHITECTURE.md). 사용자 안내: [README.md](README.md).

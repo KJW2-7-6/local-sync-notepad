@@ -27,14 +27,14 @@
 
 대상: **Windows 10/11 64비트(x64)**. Windows ARM64 전용 설치 파일은 제공하지 않습니다.
 
-1. [다운로드 / Releases](https://github.com/KJW2-7-6/local-sync-notepad/releases)에서 `Local-Sync-Notepad-0.1.0-Setup-x64.exe`를 받습니다.
+1. [다운로드 / Releases](https://github.com/KJW2-7-6/local-sync-notepad/releases)에서 `Local-Sync-Notepad-0.1.1-Setup-x64.exe`를 받습니다.
 2. 설치 파일을 실행하고 안내에 따라 설치합니다. 현재 Windows 사용자 계정에 설치합니다.
 3. 바탕 화면 또는 시작 메뉴에서 **Local Sync Notepad**를 실행합니다.
 4. 다른 PC에도 같은 프로그램을 설치합니다.
 
 정식 코드 서명 인증서를 구매하지 않은 초기 버전입니다. Windows가 ‘알려지지 않은 게시자’로 표시할 수 있습니다. 공식 저장소에서 받은 파일인지 먼저 확인하세요. Windows의 보안 승인은 사용자가 직접 결정합니다. Releases에 게시되기 전 빌드는 [GitHub Actions](https://github.com/KJW2-7-6/local-sync-notepad/actions)의 성공한 실행에서 `Local-Sync-Notepad-Windows-x64` 파일 묶음을 받을 수 있습니다. GitHub 로그인 없이 내려받으려면 Releases의 공개 설치 파일을 사용하세요.
 
-설치 파일 확인(선택): PowerShell에서 `Get-FileHash .\Local-Sync-Notepad-0.1.0-Setup-x64.exe -Algorithm SHA256`을 실행하고 함께 제공되는 `SHA256SUMS.txt`와 비교합니다.
+설치 파일 확인(선택): PowerShell에서 `Get-FileHash .\Local-Sync-Notepad-0.1.1-Setup-x64.exe -Algorithm SHA256`을 실행하고 함께 제공되는 `SHA256SUMS.txt`와 비교합니다.
 
 제거는 Windows **설정 → 앱 → 설치된 앱 → Local Sync Notepad → 제거**에서 합니다. 재설치를 위해 사용자 데이터는 기본적으로 남깁니다. 프로그램을 닫고 `%APPDATA%\local-sync-notepad` 폴더를 삭제하면 저장된 메모·방·기기 키·기록도 사라집니다. 필요한 메모는 먼저 내보내세요.
 

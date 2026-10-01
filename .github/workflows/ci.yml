@@ -1,9 +1,11 @@
 name: Test and build desktop app
 on:
   push:
-    branches: [main, 'codex/**']
+    branches: [main]
     tags: ['v*']
+    paths-ignore: ['**/*.md', 'LICENSE']
   pull_request:
+    paths-ignore: ['**/*.md', 'LICENSE']
   workflow_dispatch:
 permissions:
   contents: read
