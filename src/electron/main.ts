@@ -46,7 +46,7 @@ app.whenReady().then(async () => {
     window.webContents.on('will-navigate', event => event.preventDefault());
     window.webContents.session.setPermissionRequestHandler((_webContents, _permission, callback) => callback(false));
     ipcMain.handle('app:state', event => { assertSender(event); return service!.state(); });
-    ipcMain.handle('app:document', event => { assertSender(event); return [...service!.document()]; });
+    ipcMain.handle('app:document', event => { assertSender(event); return { data: [...service!.document()], revision: service!.documentRevision() }; });
     ipcMain.handle('app:command', async (event, command: Command) => {
       assertSender(event);
       if (!command || typeof command.type !== 'string') throw new Error('잘못된 요청입니다.');
@@ -65,12 +65,18 @@ app.whenReady().then(async () => {
       }
       return service!.command(command);
     });
-    ipcMain.on('app:update', (event, data: number[]) => {
-      try { assertSender(event); service!.applyRendererUpdate(data); }
-      catch (error) { window?.webContents.send('app:state', { ...service!.state(), error: error instanceof Error ? error.message : String(error) }); }
+    ipcMain.on('app:update', (event, update: { data: number[]; revision: number }) => {
+      try {
+        assertSender(event);
+        if (!update || update.revision !== service!.documentRevision()) return;
+        service!.applyRendererUpdate(update.data);
+      } catch (error) {
+        window?.webContents.send('app:state', { ...service!.state(), error: error instanceof Error ? error.message : String(error) });
+        window?.webContents.send('app:reset');
+      }
     });
     service.on('state', state => { if (!window?.isDestroyed()) window?.webContents.send('app:state', state); });
-    service.on('document', data => { if (!window?.isDestroyed()) window?.webContents.send('app:update', data); });
+    service.on('document', data => { if (!window?.isDestroyed()) window?.webContents.send('app:update', { data, revision: service!.documentRevision() }); });
     service.on('reset', () => { if (!window?.isDestroyed()) window?.webContents.send('app:reset'); });
     await window.loadFile(join(__dirname, '../../renderer/index.html'));
     await service.start();

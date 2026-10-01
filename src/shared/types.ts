@@ -43,9 +43,9 @@ export type Command =
 export interface DesktopApi {
   state(): Promise<AppState>;
   command(command: Command): Promise<void>;
-  document(): Promise<number[]>;
-  update(data: number[]): void;
+  document(): Promise<{ data: number[]; revision: number }>;
+  update(data: number[], revision: number): void;
   onState(callback: (state: AppState) => void): () => void;
-  onUpdate(callback: (data: number[]) => void): () => void;
+  onUpdate(callback: (update: { data: number[]; revision: number }) => void): () => void;
   onReset(callback: () => void): () => void;
 }

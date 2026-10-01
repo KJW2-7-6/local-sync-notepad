@@ -9,9 +9,9 @@ const api: DesktopApi = {
   state: () => ipcRenderer.invoke('app:state'),
   command: (command: Command) => ipcRenderer.invoke('app:command', command),
   document: () => ipcRenderer.invoke('app:document'),
-  update: (data: number[]) => ipcRenderer.send('app:update', data),
+  update: (data: number[], revision: number) => ipcRenderer.send('app:update', { data, revision }),
   onState: callback => subscribe<AppState>('app:state', callback),
-  onUpdate: callback => subscribe<number[]>('app:update', callback),
+  onUpdate: callback => subscribe<{ data: number[]; revision: number }>('app:update', callback),
   onReset: callback => subscribe('app:reset', callback),
 };
 contextBridge.exposeInMainWorld('desktop', api);

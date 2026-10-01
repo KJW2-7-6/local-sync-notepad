@@ -52,6 +52,7 @@ export class AppService extends EventEmitter {
   private stopping = false;
   private closed = false;
   private clipboard: ClipboardSync;
+  private revision = 0;
   constructor(readonly store: Store, clipboardPort: ClipboardPort, private options: ServiceOptions = {}) {
     super();
     this.discovery = options.discovery ?? new LanDiscovery();
@@ -98,6 +99,7 @@ export class AppService extends EventEmitter {
     };
   }
   document(): Uint8Array { return Y.encodeStateAsUpdate(this.doc); }
+  documentRevision(): number { return this.revision; }
   text(): string { return this.doc.getText('note').toString(); }
   applyRendererUpdate(data: number[]): void {
     if (!Array.isArray(data) || data.length > MAX_FRAME || data.some(n => !Number.isInteger(n) || n < 0 || n > 255)) throw new Error('잘못된 편집 데이터입니다.');
@@ -108,7 +110,7 @@ export class AppService extends EventEmitter {
     const candidate = new Y.Doc();
     try {
       Y.applyUpdate(candidate, this.document()); Y.applyUpdate(candidate, data);
-      if (candidate.getText('note').length > MAX_NOTE || Y.encodeStateAsUpdate(candidate).length > MAX_FRAME) throw new Error('메모의 최대 크기는 2MB입니다.');
+      if (Buffer.byteLength(candidate.getText('note').toString(), 'utf8') > MAX_NOTE || Y.encodeStateAsUpdate(candidate).length > MAX_FRAME) throw new Error('메모의 최대 크기는 2MB입니다.');
       Y.applyUpdate(this.doc, data, origin);
     } finally { candidate.destroy(); }
   }
@@ -122,6 +124,7 @@ export class AppService extends EventEmitter {
     });
   }
   private resetDocument(saved = ''): void {
+    this.revision++;
     this.doc.destroy(); this.doc = new Y.Doc();
     if (saved) Y.applyUpdate(this.doc, decode(saved));
     this.bindDocument();

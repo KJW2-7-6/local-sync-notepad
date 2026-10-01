@@ -26,22 +26,25 @@ export function Editor({ settings, onLength }: { settings: Settings; onLength: (
   useEffect(() => {
     let disposed = false, generation = 0;
     let doc: Y.Doc | undefined, awareness: Awareness | undefined;
-    const pending: number[][] = [];
+    const pending: { data: number[]; revision: number }[] = [];
     let loading = true;
-    const unsubscribeUpdate = window.desktop.onUpdate(data => {
-      if (loading) pending.push(data); else if (doc) Y.applyUpdate(doc, new Uint8Array(data), 'backend');
+    let revision = -1;
+    const unsubscribeUpdate = window.desktop.onUpdate(update => {
+      if (loading) pending.push(update); else if (doc && update.revision === revision) Y.applyUpdate(doc, new Uint8Array(update.data), 'backend');
     });
     async function load() {
       const current = ++generation; loading = true; pending.length = 0;
-      const data = await window.desktop.document();
+      const snapshot = await window.desktop.document();
       if (disposed || current !== generation) return;
       view.current?.destroy(); awareness?.destroy(); doc?.destroy();
-      doc = new Y.Doc(); Y.applyUpdate(doc, new Uint8Array(data), 'backend');
-      for (const update of pending) Y.applyUpdate(doc, new Uint8Array(update), 'backend');
+      revision = snapshot.revision;
+      const documentRevision = revision;
+      doc = new Y.Doc(); Y.applyUpdate(doc, new Uint8Array(snapshot.data), 'backend');
+      for (const update of pending) if (update.revision === revision) Y.applyUpdate(doc, new Uint8Array(update.data), 'backend');
       pending.length = 0; loading = false;
       const text = doc.getText('note'); awareness = new Awareness(doc);
       doc.on('update', (update: Uint8Array, origin: unknown) => {
-        if (origin !== 'backend') window.desktop.update([...update]);
+        if (origin !== 'backend') window.desktop.update([...update], documentRevision);
         onLength(text.length);
       });
       const undoManager = new Y.UndoManager(text);

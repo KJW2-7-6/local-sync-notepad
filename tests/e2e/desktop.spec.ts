@@ -91,7 +91,7 @@ test('실제 Electron 2개: 방 생성·승인·공동 편집·한글 조합·QR
     expect((await a.page.evaluate(() => window.desktop.state())).requests).toHaveLength(0);
     expect((await b.page.evaluate(() => window.desktop.state())).device.name).toBe('LAPTOP-E2E');
     expect((await b.page.evaluate(() => window.desktop.state())).clips[0].pinned).toBe(true);
-    expect((await b.page.evaluate(() => window.desktop.document())).length).toBeGreaterThanOrEqual(savedText.length);
+    expect((await b.page.evaluate(() => window.desktop.document())).data.length).toBeGreaterThanOrEqual(savedText.data.length);
     expect(errors).toEqual([]);
   } finally { await b?.app.close(); await a?.app.close(); rmSync(profileA, { recursive: true, force: true }); rmSync(profileB, { recursive: true, force: true }); }
 });
