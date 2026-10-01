@@ -37,6 +37,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run check
+      - run: npm run test:e2e
       - run: npm run dist:win
       - name: Check installer files and smoke-test install/uninstall
         shell: pwsh
@@ -48,6 +49,14 @@ jobs:
             release/*Setup*.exe
             release/SHA256SUMS.txt
             release/installer-check.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: windows-desktop-test-results
+          path: |
+            artifacts/
+            playwright-report/
+            test-results/
   release:
     if: startsWith(github.ref, 'refs/tags/v')
     needs: [core-and-desktop, windows-installer]

@@ -48,6 +48,14 @@ test('실제 Electron 2개: 방 생성·승인·공동 편집·한글 조합·QR
     await a.page.keyboard.press('Enter'); await a.page.keyboard.insertText('한글 입력\n여러 줄 붙여넣기\n'.repeat(300));
     await expect.poll(() => text(b!.page)).toContain('여러 줄 붙여넣기');
     await expect.poll(async () => (await text(a!.page)) === (await text(b!.page))).toBe(true);
+    await editorA.click(); await a.page.keyboard.press('Control+Home'); await a.page.keyboard.press('Control+Shift+End');
+    await a.page.keyboard.press('Control+x');
+    await expect.poll(() => text(b!.page)).toBe('');
+    await a.page.keyboard.press('Control+v');
+    await expect.poll(() => text(b!.page)).toContain('Hello 123');
+    await expect.poll(async () => (await text(a!.page)) === (await text(b!.page))).toBe(true);
+    await a.page.keyboard.press('Control+Home'); await a.page.keyboard.press('Delete'); await a.page.keyboard.press('ArrowRight'); await a.page.keyboard.press('Backspace');
+    await expect.poll(async () => (await text(a!.page)) === (await text(b!.page))).toBe(true);
     await editorA.click(); await a.page.keyboard.press('Control+Home'); await a.page.keyboard.press('Control+Shift+End'); await a.page.keyboard.insertText('선택 교체\n');
     await expect.poll(() => text(b!.page)).toContain('선택 교체');
     await expect.poll(async () => (await text(a!.page)) === (await text(b!.page))).toBe(true);
