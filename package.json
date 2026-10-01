@@ -15,7 +15,9 @@
     "check": "npm run typecheck && npm test && npm run build",
     "dist:win": "npm run build && electron-builder --win nsis --x64",
     "dist:linux": "npm run build && electron-builder --linux dir",
-    "icons": "python3 scripts/make-icons.py"
+    "icons": "python3 scripts/make-icons.py",
+    "format": "prettier --write src tests *.json *.ts .github/workflows/*.yml docs/*.md *.md",
+    "format:check": "prettier --check src tests *.json *.ts .github/workflows/*.yml"
   },
   "dependencies": {
     "@codemirror/commands": "^6.8.1",
@@ -43,6 +45,7 @@
     "@vitejs/plugin-react": "^5.0.0",
     "electron": "^40.0.0",
     "electron-builder": "^26.0.12",
+    "prettier": "^3.9.9",
     "tsx": "^4.20.0",
     "typescript": "^5.9.2",
     "vite": "^7.1.0"
@@ -60,7 +63,9 @@
       "package.json"
     ],
     "asar": true,
-    "toolsets": { "wine": "1.0.1" },
+    "toolsets": {
+      "wine": "1.0.1"
+    },
     "win": {
       "target": [
         "nsis"

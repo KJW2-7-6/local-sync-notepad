@@ -1,8 +1,14 @@
 {
   "compilerOptions": {
-    "target": "ES2022", "module": "CommonJS", "moduleResolution": "Node",
-    "rootDir": "src", "outDir": "dist/main", "strict": true,
-    "esModuleInterop": true, "skipLibCheck": true, "types": ["node"]
+    "target": "ES2022",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "rootDir": "src",
+    "outDir": "dist/main",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "types": ["node"]
   },
   "include": ["src/core/**/*.ts", "src/electron/**/*.ts", "src/shared/**/*.ts"]
 }

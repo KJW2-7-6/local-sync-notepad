@@ -1,2 +1,6 @@
 import type { DesktopApi } from '../shared/types';
-declare global { interface Window { desktop: DesktopApi } }
+declare global {
+  interface Window {
+    desktop: DesktopApi;
+  }
+}

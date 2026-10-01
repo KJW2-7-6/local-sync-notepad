@@ -1,28 +1,68 @@
 export type Theme = 'light' | 'dark';
 export interface Settings {
-  theme: Theme; fontFamily: string; fontSize: number; autoClipboard: boolean; autoStart: boolean;
+  theme: Theme;
+  fontFamily: string;
+  fontSize: number;
+  autoClipboard: boolean;
+  autoStart: boolean;
 }
 export interface Device {
-  id: string; name: string; os: string; publicKey: string; trusted: boolean;
-  online: boolean; lastSeen: number; isHost: boolean;
+  id: string;
+  name: string;
+  os: string;
+  publicKey: string;
+  trusted: boolean;
+  online: boolean;
+  lastSeen: number;
+  isHost: boolean;
 }
 export interface Room {
-  id: string; name: string; code: string; hostId: string; host: string; port: number;
-  fingerprint: string; role: 'host' | 'member';
+  id: string;
+  name: string;
+  code: string;
+  hostId: string;
+  host: string;
+  port: number;
+  fingerprint: string;
+  role: 'host' | 'member';
 }
 export interface DiscoveredRoom {
-  id: string; name: string; code: string; host: string; port: number; fingerprint: string;
+  id: string;
+  name: string;
+  code: string;
+  host: string;
+  port: number;
+  fingerprint: string;
 }
 export interface Clip {
-  id: string; originId: string; originName: string; text: string; createdAt: number; pinned: boolean;
+  id: string;
+  originId: string;
+  originName: string;
+  text: string;
+  createdAt: number;
+  pinned: boolean;
 }
-export interface JoinRequest { id: string; name: string; os: string; safetyCode: string }
-export type Connection = 'idle' | 'hosting' | 'connecting' | 'approval' | 'connected' | 'offline' | 'rejected';
+export interface JoinRequest {
+  id: string;
+  name: string;
+  os: string;
+  safetyCode: string;
+}
+export type Connection =
+  'idle' | 'hosting' | 'connecting' | 'approval' | 'connected' | 'offline' | 'rejected';
 export interface AppState {
-  device: Pick<Device, 'id' | 'name' | 'os'>; settings: Settings; room: Room | null;
-  devices: Device[]; clips: Clip[]; requests: JoinRequest[]; discovered: DiscoveredRoom[];
-  connection: Connection; error: string | null; safetyCode: string | null;
-  addresses: string[]; storageProtected: boolean;
+  device: Pick<Device, 'id' | 'name' | 'os'>;
+  settings: Settings;
+  room: Room | null;
+  devices: Device[];
+  clips: Clip[];
+  requests: JoinRequest[];
+  discovered: DiscoveredRoom[];
+  connection: Connection;
+  error: string | null;
+  safetyCode: string | null;
+  addresses: string[];
+  storageProtected: boolean;
 }
 export type Command =
   | { type: 'create'; name: string }
