@@ -118,7 +118,7 @@ Windows 네트워크를 ‘개인’으로 설정하고 방화벽 안내에서 �
 
 Windows 저장 문제는 Linux 성공만으로 발견할 수 없었던 실제 결함이다. 오류를 무시하지 않고 Windows에서 재검사했다. Linux의 Wine 빌드 환경은 해결됐다고 주장하지 않는다. 배포 설치 파일은 Windows에서 제작한다.
 
-추가 게시 실패: 태그 실행에서 설치 도구가 GitHub 자동 게시를 시도해 인증값 오류가 났다. 설치 제작에는 게시 금지 옵션을 명시하고 게시 작업의 임시 GitHub 권한과 분리했다. 실패한 v0.1.0 태그는 기록을 보존하고 공개 버전을 0.1.1로 올려 재검사한다.
+추가 게시 실패: 태그 실행에서 설치 도구가 GitHub 자동 게시를 시도해 인증값 오류가 났다. 설치 제작에는 게시 금지 옵션을 명시하고 게시 작업의 임시 GitHub 권한과 분리했다. 실패한 v0.1.0 태그는 기록을 보존하고 공개 버전을 0.1.1로 올렸다. 같은 검사·설치·게시를 다시 실행했고 모두 성공했다.
 
 ## 15. 클라우드에서 확인하지 못한 부분
 
@@ -136,5 +136,16 @@ Windows 저장 문제는 Linux 성공만으로 발견할 수 없었던 실제 �
 
 - Windows 설치·실행·제거를 확인한 실행: [Windows 및 Linux 자동 검사](https://github.com/KJW2-7-6/local-sync-notepad/actions/runs/36820719128).
 - 최신 기능 검증: [Windows/Linux 핵심·실제 앱·설치·보호 저장·제거 검사](https://github.com/KJW2-7-6/local-sync-notepad/actions/runs/36821267174). 두 운영체제에서 핵심 12개, 실제 앱 시나리오 2개 성공. Windows 설치/실행/OS 보호 저장/제거 성공.
-- 공개 설치 파일: [v0.1.1 다운로드](https://github.com/KJW2-7-6/local-sync-notepad/releases/tag/v0.1.1). 게시 결과는 배포 완료 후 확인 기록에 추가한다.
+- 공개 설치 파일: [v0.1.1 다운로드](https://github.com/KJW2-7-6/local-sync-notepad/releases/tag/v0.1.1). 공개 게시와 파일 다운로드·무결성 대조까지 완료했다.
 - 상세 작업 기록: [DEVELOPMENT_REPORT.md](DEVELOPMENT_REPORT.md). 구조: [ARCHITECTURE.md](docs/ARCHITECTURE.md). 사용자 안내: [README.md](README.md).
+
+## 공개 배포 및 GitHub 최종 확인
+
+- 첫 공개 버전 **0.1.1**을 2026년 10월 1일 15:00(한국 시간)에 게시했다.
+- [Windows 설치 파일 직접 다운로드](https://github.com/KJW2-7-6/local-sync-notepad/releases/download/v0.1.1/Local-Sync-Notepad-0.1.1-Setup-x64.exe)
+- 최종 배포 검사: https://github.com/KJW2-7-6/local-sync-notepad/actions/runs/36822300291 . Linux와 Windows의 핵심 12개, 실제 앱 시나리오 2개, Windows 설치·실행·보호 저장·제거, 공개 게시가 모두 성공했다.
+- 공개 설치 파일을 Codex Cloud의 `release/Local-Sync-Notepad-0.1.1-Setup-x64.exe`로 실제 내려받았다. 파일 크기 100,478,608바이트(약 95.8MiB). 공개한 SHA-256 및 GitHub 파일 확인값과 실제 파일의 확인값이 일치했다.
+- SHA-256: `154ed0eef8ce3b8d6b3b9606c1cc9af9d947884963e8da58e4abc0ec4b05f4be`
+- 함께 공개한 `installer-check.json`의 설치·앱 실행·Windows 보호 저장·제거 항목은 모두 참이다. 실제 사용자 PC 두 대의 검증을 대신하는 결과는 아니다.
+- 의미 있는 단계별 커밋을 보존해 PR #1을 기본 브랜치 `main`에 병합했다. 클라우드 작업 공간도 `main`으로 맞췄다. 설치 빌드·사용자 인증정보·캐시·임시 데이터는 소스 커밋에 넣지 않았다.
+- 확인되지 않은 실제 PC 항목과 향후 범위는 이 보고서 15~17절 및 실제 PC 검사 안내에 남겼다.
