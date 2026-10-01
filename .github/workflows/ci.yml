@@ -1,0 +1,65 @@
+name: Test and build desktop app
+on:
+  push:
+    branches: [main, 'codex/**']
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  core-and-desktop:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: xvfb-run -a npm run test:e2e
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: desktop-test-results
+          path: |
+            artifacts/
+            playwright-report/
+            test-results/
+  windows-installer:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm run dist:win
+      - name: Check installer files and smoke-test install/uninstall
+        shell: pwsh
+        run: ./scripts/check-windows-installer.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Local-Sync-Notepad-Windows-x64
+          path: |
+            release/*Setup*.exe
+            release/SHA256SUMS.txt
+            release/installer-check.json
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [core-and-desktop, windows-installer]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: Local-Sync-Notepad-Windows-x64
+          path: release
+      - name: Publish installer
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" release/* --repo "$GITHUB_REPOSITORY" --title "Local Sync Notepad $GITHUB_REF_NAME" --generate-notes
