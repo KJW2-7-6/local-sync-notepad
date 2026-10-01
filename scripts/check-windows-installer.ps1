@@ -3,7 +3,7 @@ $installer = Get-ChildItem (Join-Path $PSScriptRoot '../release') -Filter '*Setu
 if (!$installer -or $installer.Length -lt 10000000) { throw 'The Windows installer is missing or incomplete.' }
 $target = Join-Path $env:TEMP ('LocalSyncInstallerCheck-' + [guid]::NewGuid().ToString('N'))
 $output = Join-Path $PSScriptRoot '../release'
-$result = @{ installer = $installer.Name; install = $false; launch = $false; uninstall = $false; platform = 'Windows GitHub Actions'; testedAt = [DateTime]::UtcNow.ToString('o') }
+$result = @{ installer = $installer.Name; install = $false; launch = $false; protectedStorage = $false; uninstall = $false; platform = 'Windows GitHub Actions'; testedAt = [DateTime]::UtcNow.ToString('o') }
 try {
   $install = Start-Process -FilePath $installer.FullName -ArgumentList @('/S', "/D=$target") -Wait -PassThru
   if ($install.ExitCode -ne 0) { throw "Installer exit code $($install.ExitCode)" }
@@ -21,6 +21,9 @@ try {
   if (!$appProcess.CloseMainWindow()) { Stop-Process -Id $appProcess.Id -Force }
   else { if (!$appProcess.WaitForExit(10000)) { Stop-Process -Id $appProcess.Id -Force } }
   $result.launch = $true
+  $bytes = [IO.File]::ReadAllBytes((Join-Path $profile 'state.bin'))
+  if ([Text.Encoding]::ASCII.GetString($bytes, 0, 4) -ne 'LSE1') { throw 'The Windows app did not use OS protected storage.' }
+  $result.protectedStorage = $true
   $uninstaller = Get-ChildItem $target -Filter '*Uninstall*.exe' | Select-Object -First 1
   if (!$uninstaller) { throw 'The Windows uninstaller is missing.' }
   $uninstall = Start-Process -FilePath $uninstaller.FullName -ArgumentList '/S' -Wait -PassThru

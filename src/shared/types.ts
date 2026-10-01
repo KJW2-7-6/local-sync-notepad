@@ -37,6 +37,7 @@ export type Command =
   | { type: 'deleteClip'; id: string }
   | { type: 'pinClip'; id: string }
   | { type: 'clearClips' }
+  | { type: 'dismissError' }
   | { type: 'leave' }
   | { type: 'reconnect' }
   | { type: 'exportNote' };

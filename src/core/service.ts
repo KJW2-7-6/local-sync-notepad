@@ -192,6 +192,7 @@ export class AppService extends EventEmitter {
         this.clipboard.copy(command.text); break;
       case 'deleteClip': this.store.data.clips = this.store.data.clips.filter(c => c.id !== command.id); this.flush(); break;
       case 'clearClips': this.store.data.clips = []; this.flush(); break;
+      case 'dismissError': break;
       case 'pinClip': {
         const clip = this.store.data.clips.find(c => c.id === command.id);
         if (clip) {

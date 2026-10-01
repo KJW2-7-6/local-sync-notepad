@@ -134,3 +134,26 @@ test('보안: 잘못된 방장 인증서 차단, 승인 기기의 ID만 도용�
     assert.equal(h.service.state().devices.find(d => d.id === stolen.id)!.publicKey, a.store.data.identity.publicKey);
   } finally { await impostor.cleanup(); await a.cleanup(); await h.cleanup(); }
 });
+
+test('승인 전 편집 패킷은 거부하고 메모 크기 제한은 저장된 문서를 손상시키지 않는다', async () => {
+  const h = fixture(); const ed = editor(h.service);
+  let ws: WebSocket | undefined;
+  try {
+    await h.service.start(); await h.service.command({ type: 'create', name: '입력 보호' }); ed.text.insert(0, '보호할 메모');
+    const room = h.service.state().room!, identity = makeIdentity();
+    ws = new WebSocket(`wss://127.0.0.1:${room.port}`, { rejectUnauthorized: false });
+    const messages: any[] = [];
+    ws.on('message', raw => {
+      const msg = JSON.parse(raw.toString()); messages.push(msg);
+      if (msg.type === 'challenge') ws!.send(JSON.stringify({ type: 'hello', code: room.code, device: { id: identity.id, name: 'UNAPPROVED', os: 'win32', publicKey: identity.publicKey }, proof: prove(identity, msg.nonce, room.id) }));
+      if (msg.type === 'pending') ws!.send(JSON.stringify({ type: 'update', data: Buffer.from(h.service.document()).toString('base64') }));
+    });
+    await until(() => messages.some(m => m.type === 'rejected'));
+    assert.equal(messages.some(m => m.type === 'ready' || m.type === 'clipboard' || m.type === 'update'), false);
+    assert.equal(h.service.text(), '보호할 메모');
+    assert.throws(() => ed.text.insert(ed.text.length, '한'.repeat(800000)), /2MB/);
+    assert.equal(h.service.text(), '보호할 메모'); h.service.flush();
+    const loaded = new AppService(new Store(h.path), h.clipboard, { discovery: noDiscovery });
+    assert.equal(loaded.text(), '보호할 메모'); await loaded.close();
+  } finally { ws?.terminate(); ed.close(); await h.cleanup(); }
+});

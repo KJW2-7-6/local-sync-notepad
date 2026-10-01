@@ -1,4 +1,4 @@
-import { createHash, generateKeyPairSync, randomBytes, sign, verify, X509Certificate } from 'node:crypto';
+import { createHash, createPublicKey, generateKeyPairSync, randomBytes, sign, verify, X509Certificate } from 'node:crypto';
 import { hostname, platform } from 'node:os';
 import selfsigned from 'selfsigned';
 
@@ -31,7 +31,10 @@ export function prove(identity: Identity, nonce: string, roomId: string): string
   return sign(null, Buffer.from(proofPayload(nonce, roomId, identity.id, identity.publicKey)), identity.privateKey).toString('base64');
 }
 export function checkProof(publicKey: string, id: string, nonce: string, roomId: string, signature: string): boolean {
-  try { return verify(null, Buffer.from(proofPayload(nonce, roomId, id, publicKey)), publicKey, Buffer.from(signature, 'base64')); } catch { return false; }
+  try {
+    const key = createPublicKey(publicKey);
+    return key.asymmetricKeyType === 'ed25519' && verify(null, Buffer.from(proofPayload(nonce, roomId, id, publicKey)), key, Buffer.from(signature, 'base64'));
+  } catch { return false; }
 }
 export function safetyCode(nonce: string, publicKey: string, fp: string): string {
   return String(parseInt(digest(`${nonce}|${publicKey}|${fp}`).slice(0, 8), 16) % 1000000).padStart(6, '0');

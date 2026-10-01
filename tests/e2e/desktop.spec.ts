@@ -95,3 +95,21 @@ test('실제 Electron 2개: 방 생성·승인·공동 편집·한글 조합·QR
     expect(errors).toEqual([]);
   } finally { await b?.app.close(); await a?.app.close(); rmSync(profileA, { recursive: true, force: true }); rmSync(profileB, { recursive: true, force: true }); }
 });
+
+test('새 방 전환: 이전 방에서 늦게 도착한 편집 변경은 적용하지 않는다', async () => {
+  const profile = mkdtempSync(join(tmpdir(), 'localsync-ui-isolation-'));
+  let desktop: Awaited<ReturnType<typeof launch>> | undefined;
+  try {
+    desktop = await launch(profile);
+    await desktop.page.getByRole('button', { name: '방 만들기', exact: true }).click();
+    const editor = desktop.page.getByRole('textbox', { name: '공동 메모 편집기' });
+    await editor.click(); await desktop.page.keyboard.insertText('이전 방의 민감한 메모');
+    const oldDocument = await desktop.page.evaluate(() => window.desktop.document());
+    await desktop.page.evaluate(() => window.desktop.command({ type: 'leave' }));
+    await desktop.page.getByRole('button', { name: '방 만들기', exact: true }).click();
+    await expect(editor).toBeVisible();
+    await desktop.page.evaluate(snapshot => window.desktop.update(snapshot.data, snapshot.revision), oldDocument);
+    await expect.poll(() => text(desktop!.page)).toBe('');
+    expect((await desktop.page.evaluate(() => window.desktop.document())).revision).toBeGreaterThan(oldDocument.revision);
+  } finally { await desktop?.app.close(); rmSync(profile, { recursive: true, force: true }); }
+});
