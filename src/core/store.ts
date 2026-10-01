@@ -37,7 +37,8 @@ export class Store {
   save(): void {
     const temporary = `${this.path}.tmp`;
     writeFileSync(temporary, this.codec.encode(JSON.stringify(this.data)), { mode: 0o600 });
-    const fd = openSync(temporary, 'r');
+    // Windows FlushFileBuffers requires a writable handle even after writeFileSync has closed it.
+    const fd = openSync(temporary, 'r+');
     try { fsyncSync(fd); } finally { closeSync(fd); }
     if (existsSync(this.path) && !this.recovered) { copyFileSync(this.path, `${this.path}.bak`); chmodSync(`${this.path}.bak`, 0o600); }
     renameSync(temporary, this.path); this.recovered = false;
